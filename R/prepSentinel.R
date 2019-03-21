@@ -123,8 +123,10 @@ prepSentinel <- function(datasets, dir_out = NULL, format = "vrt", select.tiles 
 
     #get MTD and level
     mtd.file <- grep("DATASTRIP", grep("GRANULE", grep("MTD", grep(".xml", zip.files, value = T), value = T), invert = T, value = T), invert = T, value = T)
+    cloud.file <- grep("QI_DATA", grep("MSK_CLOUDS_B00.gml", zip.files, value = T), value = T)
     dir.mtd <- gsub(".zip", "", dataset)
     mtd.file <- suppressWarnings(unzip(zipfile = dataset, exdir = dir.mtd, files = mtd.file, overwrite = owrt, junkpaths = T))
+    cloud.file <- suppressWarnings(unzip(zipfile = dataset, exdir = dir.mtd, files = cloud.file, overwrite = owrt, junkpaths = T))
     mtd <- readLines(mtd.file)
     level <- tolower(strsplit(strsplit(grep("PROCESSING_LEVEL", mtd, value = T), "<")[[1]][2], ">")[[1]][2])
 
@@ -179,7 +181,8 @@ prepSentinel <- function(datasets, dir_out = NULL, format = "vrt", select.tiles 
       dst <- vrt
     }
     dst <- lapply(dst, function(x) unlist(x, recursive = F))
-    names(dst) <- tiles
+    dst <- c(dst, cloud.file)
+    names(dst) <- c(tiles, "cloud_file")
     return(dst)
   }
 
