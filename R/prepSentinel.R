@@ -157,7 +157,7 @@ prepSentinel <- function(datasets, dir_out = NULL, format = "vrt", select.tiles 
     vrt <- mapply(bjp2 = bands.jp2, dprep = dir.prep, fjp2 = files.jp2, function(bjp2, dprep, fjp2) lapply(names(bjp2), function(x, y = names(bjp2[[1]]), dp = dprep, f = fjp2, b = bjp2) paste0(dp, "/", gsub(".SAFE", "", tail(strsplit(f[1], "/")[[1]], n=6)[1]), "_", x, "_", y, ".vrt")), SIMPLIFY = F)
     catch <- mapply(bjp2 = bands.jp2, v = vrt, function(bjp2, v, owr = owrt) mapply(x = bjp2, y = v, FUN = function(x, y, ow = owr){
       mapply(x2 = x, y2 = y, FUN = function(x2, y2, ow2 = ow){
-        if(!isTRUE(ow2) & !file.exists(y2)) gdalbuildvrt(x2, y2, resolution = "highest", separate = T)
+        if(!isTRUE(ow2) & !file.exists(y2)) gdalbuildvrt(x2, y2, resolution = "highest", separate = T, verbose = T)
       }, SIMPLIFY = F)
     }), SIMPLIFY = F)
 
